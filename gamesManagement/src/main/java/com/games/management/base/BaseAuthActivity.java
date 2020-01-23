@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -18,12 +19,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.services.games.GamesScopes;
 
 public class BaseAuthActivity extends AppCompatActivity {
     private static final String TAG = BaseAuthActivity.class.getSimpleName();
 
     private static final int RC_SIGN_IN = 1001;
+    private static final int RC_REQUEST_AUTHORIZATION = 1002;
 
     private GoogleSignInClient mGoogleSignInClient;
     private GoogleSignInAccount mGoogleSignInAccount;
@@ -43,7 +46,12 @@ public class BaseAuthActivity extends AppCompatActivity {
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == Activity.RESULT_OK && resultData != null) {
                 handleSignInResult(resultData);
-            }
+            } else
+                handleSignInFailed();
+        }
+        if (requestCode == RC_REQUEST_AUTHORIZATION) {
+            if (resultCode == Activity.RESULT_OK)
+                onConnectSuccess();
         }
 
         super.onActivityResult(requestCode, resultCode, resultData);
@@ -78,31 +86,36 @@ public class BaseAuthActivity extends AppCompatActivity {
         });
     }
 
+    private void handleSignInFailed() {
+        mProgressDialogConnecting.dismiss();
+        mProgressDialogConnecting = null;
+    }
+
     private void handleSignInResult(Intent result) {
         mProgressDialogConnecting.dismiss();
         mProgressDialogConnecting = null;
 
         GoogleSignIn.getSignedInAccountFromIntent(result)
-            .addOnSuccessListener(new OnSuccessListener<GoogleSignInAccount>() {
-                @Override
-                public void onSuccess(GoogleSignInAccount googleSignInAccount) {
-                    Log.d(TAG, "Signed in as " + googleSignInAccount.getEmail());
-                    if (mGoogleSignInAccount != googleSignInAccount)
-                        mGoogleSignInAccount = googleSignInAccount;
+                .addOnSuccessListener(new OnSuccessListener<GoogleSignInAccount>() {
+                    @Override
+                    public void onSuccess(GoogleSignInAccount googleSignInAccount) {
+                        Log.d(TAG, "Signed in as " + googleSignInAccount.getEmail());
+                        if (mGoogleSignInAccount != googleSignInAccount)
+                            mGoogleSignInAccount = googleSignInAccount;
 
-                    onConnectSuccess();
-                }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    e.printStackTrace();
-                    Log.e(TAG, "Unable to sign in.", e);
+                        onConnectSuccess();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        e.printStackTrace();
+                        Log.e(TAG, "Unable to sign in.", e);
 
-                    mGoogleSignInAccount = null;
-                    onConnectFailed(e);
-                }
-            });
+                        mGoogleSignInAccount = null;
+                        onConnectFailed(e);
+                    }
+                });
     }
 
     protected void onConnectSuccess() {
@@ -112,9 +125,31 @@ public class BaseAuthActivity extends AppCompatActivity {
         reportError("Sign-in failed", e);
     }
 
+    private boolean tryRecoverFrom(Exception e) {
+        if (e == null)
+            return false;
+
+        Intent recoverIntent = null;
+        if (e instanceof UserRecoverableAuthException)
+            recoverIntent = ((UserRecoverableAuthException)e).getIntent();
+        else if (e instanceof UserRecoverableAuthIOException)
+            recoverIntent = ((UserRecoverableAuthIOException)e).getIntent();
+
+        if (recoverIntent != null) {
+            startActivityForResult(recoverIntent, RC_REQUEST_AUTHORIZATION);
+            return true;
+        }
+
+        return false;
+    }
+
     protected void reportError(String msg, Exception e) {
         e.printStackTrace();
         Log.e(TAG, msg, e);
+
+        if (tryRecoverFrom(e))
+            return;
+
         new AlertDialog.Builder(this)
                 .setMessage(e.toString())
                 .setTitle(msg)
