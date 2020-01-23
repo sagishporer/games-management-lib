@@ -4,6 +4,6 @@
 
     <string name="activity_title_management_lib">Management Lib</string>
     <string name="activity_title_hidden_players">Hidden Players</string>
-    <string name="activity_title_leaderboards">Leaderboard</string>
+    <string name="activity_title_leaderboards">Leaderboards</string>
     <string name="activity_title_manage_leaderboard">Manage Leaderboard</string>
 </resources>
