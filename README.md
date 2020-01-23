@@ -2,7 +2,7 @@
 Allow simple removal of cheating players from leaderboards, using Google Play Games Management API.
 
 ## IMPORTANT
-- DO NOT LEAVE THIS LIBRARY IN PRODUCTION. 
+- THIS LIBRARY IN NOT PRODUCTION QUALITY. 
 - It may take up to 72 hours (!!) once a player is 'hidden' until the player actually stop appearing in the leaderboard.
 - The library must be used in an APK with the same bundle id (namespace) & signature as the production game. This is to allow Google Play sign-in. The easiest way is just to add the library to the game & open the MenuActivity.
 - You must be signed-in within the game with the user of the Play Console.
@@ -28,16 +28,10 @@ dependencies {
 }
 ```
 
-3. App module, launch activity, onCreate() method: Open the library MenuActivity
+3. Launch the library MenuActivity activity from code
 ```
-@Override
-public void onCreate(Bundle savedInstanceState) {
-    ...            
-    ...    
-
     Intent intent = new Intent(this, com.games.management.MenuActivity.class);   
     this.startActivity(intent);
-}
 ```
 
 ## References & Resources
