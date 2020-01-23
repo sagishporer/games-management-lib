@@ -24,7 +24,7 @@ allprojects {
 dependencies {
     ...
     ....
-    implementation 'com.github.sagishporer:games-management-lib:0.1.0'
+    implementation 'com.github.sagishporer:games-management-lib:0.2.0'
 }
 ```
 
