@@ -1,0 +1,40 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion "29.0.2"
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 28
+        versionCode 10
+        versionName "0.1.0"
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'com.google.android.gms:play-services-base:17.1.0'
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
+
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.paging:paging-runtime:2.1.1'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+
+    implementation ('com.google.http-client:google-http-client-gson:1.26.0') {
+        exclude group: 'org.apache.httpcomponents'
+    }
+
+    implementation('com.google.api-client:google-api-client-android:1.26.0') {
+        exclude group: 'org.apache.httpcomponents'
+    }
+
+    implementation ('com.google.apis:google-api-services-games:v1-rev291-1.24.1') {
+        exclude group: 'org.apache.httpcomponents'
+    }
+
+    implementation ('com.google.apis:google-api-services-gamesManagement:v1management-rev279-1.24.1') {
+        exclude group: 'org.apache.httpcomponents'
+    }
+}

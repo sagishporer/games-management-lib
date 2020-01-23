@@ -1,0 +1,9 @@
+<resources>
+    <string name="application_name">Management for Google Play Games</string>
+    <string name="please_wait">Please wait&#8230;</string>
+
+    <string name="activity_title_management_lib">Management Lib</string>
+    <string name="activity_title_hidden_players">Hidden Players</string>
+    <string name="activity_title_leaderboards">Leaderboard</string>
+    <string name="activity_title_manage_leaderboard">Manage Leaderboard</string>
+</resources>

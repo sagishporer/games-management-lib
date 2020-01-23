@@ -1,0 +1,2 @@
+include ':gamesManagement'
+rootProject.name='games-management-lib'
