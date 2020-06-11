@@ -87,6 +87,16 @@ public class BaseAuthActivity extends AppCompatActivity {
     }
 
     private void handleSignInFailed() {
+        Log.d(TAG, "Sign in failed");
+        String reason = "";
+        if ((resultData != null)&&(resultData.getExtras() != null)) {
+            Object obj = resultData.getExtras().get("googleSignInStatus");
+            if (obj != null)
+                reason = obj.toString();
+        }
+
+        Toast.makeText(this, "Sign-in failed. " + reason, Toast.LENGTH_LONG).show();
+		
         mProgressDialogConnecting.dismiss();
         mProgressDialogConnecting = null;
     }
