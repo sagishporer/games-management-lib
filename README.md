@@ -1,3 +1,5 @@
+[![](https://jitpack.io/v/sagishporer/games-management-lib.svg)](https://jitpack.io/#sagishporer/games-management-lib)
+
 # Management Library for Google Play Games
 Allow simple removal of cheating players from leaderboards, using Google Play Games Management API.
 
