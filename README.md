@@ -6,7 +6,7 @@ Allow simple removal of cheating players from leaderboards, using Google Play Ga
 ## IMPORTANT
 - THIS LIBRARY IN NOT PRODUCTION QUALITY. 
 - It may take up to 72 hours (!!) once a player is 'hidden' until the player actually stop appearing in the leaderboard.
-- The library must be used in an APK with the same bundle id (namespace) & signature as the production game. This is to allow Google Play sign-in. The easiest way is just to add the library to the game & open the MenuActivity.
+- The library must be used in an APK with the same package name (namespace) & signature as the production game. This is to allow Google Play sign-in. The easiest way is just to add the library to the game & open the MenuActivity.
 - You must be signed-in within the game with the user of the Play Console.
 
 ## Usage
